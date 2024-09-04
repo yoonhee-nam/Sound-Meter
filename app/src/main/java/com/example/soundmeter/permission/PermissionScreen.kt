@@ -25,6 +25,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import com.example.soundmeter.GreetingPreview
+import com.example.soundmeter.screen.PulsatingCircles
 
 @Composable
 fun PermissionScreen() {
@@ -60,7 +61,7 @@ fun PermissionScreen() {
     ) {
         if (hasAudioRecordPermission) {
             //UI변경하기
-            GreetingPreview()
+            PulsatingCircles()
 
         } else {
 
