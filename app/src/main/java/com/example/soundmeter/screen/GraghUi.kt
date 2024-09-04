@@ -1,5 +1,6 @@
 package com.example.soundmeter.screen
 
+import android.util.Log
 import androidx.compose.animation.core.spring
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -11,6 +12,7 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
@@ -42,8 +44,12 @@ import com.patrykandpatrick.vico.core.entry.ChartEntryModelProducer
 import com.patrykandpatrick.vico.core.entry.FloatEntry
 import com.patrykandpatrick.vico.core.scroll.AutoScrollCondition
 import com.patrykandpatrick.vico.core.scroll.InitialScroll
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 @Composable
 fun GraphUi() {
@@ -52,7 +58,7 @@ fun GraphUi() {
     var value by remember { mutableStateOf(0.0) }
     val modelProducer = remember { ChartEntryModelProducer() }
     val datasetForModel = remember { mutableStateListOf<FloatEntry>() }
-    var datasetLIneSpec by remember{ mutableStateOf(emptyList<LineChart.LineSpec>()) }
+    var datasetLIneSpec by remember { mutableStateOf(emptyList<LineChart.LineSpec>()) }
 
     val scrollState = rememberChartScrollState()
 
@@ -65,134 +71,159 @@ fun GraphUi() {
 
     val isRecording = remember { mutableStateOf(false) }
     val coroutineScope = rememberCoroutineScope()
+    var xPos by remember { mutableStateOf(0f) }
+    var recordingJob: Job? by remember { mutableStateOf(null) }
 
     LaunchedEffect(isRecording.value) {
         if (isRecording.value) {
-            var xPos = 0f
-
-            coroutineScope.launch {
+            recordingJob = coroutineScope.launch {
                 viewModel.decibelFlow.collect { dbValue ->
-                    datasetForModel.add(FloatEntry(x = xPos, y = dbValue.toFloat()))
-                    modelProducer.setEntries(datasetForModel)
-                    value = dbValue
-
-                    xPos += 1f
-                    delay(1000)
+                    withContext(Dispatchers.Main) {
+                        datasetForModel.add(FloatEntry(x = xPos, y = dbValue.toFloat()))
+                        modelProducer.setEntries(datasetForModel)
+                        value = dbValue
+                        xPos += 1f
+                        delay(1000)
+                        Log.d(
+                            "GraphUi",
+                            "GraphUi Updated Dataset: ${datasetForModel.joinToString()}"
+                        )
+                    }
                 }
+            }
+        } else {
+            recordingJob?.cancel()
+        }
+    }
+    DisposableEffect(Unit) {
+        onDispose {
+            if (!isRecording.value) {
+                datasetForModel.clear()
+                datasetLIneSpec = emptyList()
+                modelProducer.setEntries(emptyList<List<ChartEntry>>())
             }
         }
     }
-    LaunchedEffect(value) {
-        datasetLIneSpec = listOf(
-            LineChart.LineSpec(
-                lineColor = when (value.toInt()) {
-                    in 0..40 -> Color(0xFF06D001).toArgb()
-                    in 41..70 -> Color.Yellow.toArgb()
-                    in 71..90 -> Color(0xFFFC4100).toArgb()
-                    in 91..1000 -> Color(0xFFE4003A).toArgb()
-                    else -> Color.Green.toArgb()
-                },
-                lineBackgroundShader = DynamicShaders.fromBrush(
-                    brush = Brush.verticalGradient(
-                        colors = when (value.toInt()) {
-                            in 0..40 -> listOf(
-                                Color(0xFF06D001).copy(alpha = com.patrykandpatrick.vico.core.DefaultAlpha.LINE_BACKGROUND_SHADER_START),
-                                Color(0xFF06D001).copy(alpha = com.patrykandpatrick.vico.core.DefaultAlpha.LINE_BACKGROUND_SHADER_END)
-                            )
-                            in 41..70 -> listOf(
-                                Color.Yellow.copy(alpha = com.patrykandpatrick.vico.core.DefaultAlpha.LINE_BACKGROUND_SHADER_START),
-                                Color.Yellow.copy(alpha = com.patrykandpatrick.vico.core.DefaultAlpha.LINE_BACKGROUND_SHADER_END)
-                            )
-                            in 71..90 -> listOf(
-                                Color(0xFFFC4100).copy(alpha = com.patrykandpatrick.vico.core.DefaultAlpha.LINE_BACKGROUND_SHADER_START),
-                                Color(0xFFFC4100).copy(alpha = com.patrykandpatrick.vico.core.DefaultAlpha.LINE_BACKGROUND_SHADER_END)
-                            )
-                            in 91..1000 -> listOf(
-                                Color(0xFFE4003A).copy(alpha = com.patrykandpatrick.vico.core.DefaultAlpha.LINE_BACKGROUND_SHADER_START),
-                                Color(0xFFE4003A).copy(alpha = com.patrykandpatrick.vico.core.DefaultAlpha.LINE_BACKGROUND_SHADER_END)
-                            )
-                            else -> listOf(
-                                Color.Green.copy(alpha = com.patrykandpatrick.vico.core.DefaultAlpha.LINE_BACKGROUND_SHADER_START),
-                                Color.Green.copy(alpha = com.patrykandpatrick.vico.core.DefaultAlpha.LINE_BACKGROUND_SHADER_END)
-                            )
-                        }
+
+        LaunchedEffect(value) {
+            datasetLIneSpec = listOf(
+                LineChart.LineSpec(
+                    lineColor = when (value.toInt()) {
+                        in 0..40 -> Color(0xFF06D001).toArgb()
+                        in 41..70 -> Color.Yellow.toArgb()
+                        in 71..90 -> Color(0xFFFC4100).toArgb()
+                        in 91..1000 -> Color(0xFFE4003A).toArgb()
+                        else -> Color.Green.toArgb()
+                    },
+                    lineBackgroundShader = DynamicShaders.fromBrush(
+                        brush = Brush.verticalGradient(
+                            colors = when (value.toInt()) {
+                                in 0..40 -> listOf(
+                                    Color(0xFF06D001).copy(alpha = com.patrykandpatrick.vico.core.DefaultAlpha.LINE_BACKGROUND_SHADER_START),
+                                    Color(0xFF06D001).copy(alpha = com.patrykandpatrick.vico.core.DefaultAlpha.LINE_BACKGROUND_SHADER_END)
+                                )
+
+                                in 41..70 -> listOf(
+                                    Color.Yellow.copy(alpha = com.patrykandpatrick.vico.core.DefaultAlpha.LINE_BACKGROUND_SHADER_START),
+                                    Color.Yellow.copy(alpha = com.patrykandpatrick.vico.core.DefaultAlpha.LINE_BACKGROUND_SHADER_END)
+                                )
+
+                                in 71..90 -> listOf(
+                                    Color(0xFFFC4100).copy(alpha = com.patrykandpatrick.vico.core.DefaultAlpha.LINE_BACKGROUND_SHADER_START),
+                                    Color(0xFFFC4100).copy(alpha = com.patrykandpatrick.vico.core.DefaultAlpha.LINE_BACKGROUND_SHADER_END)
+                                )
+
+                                in 91..1000 -> listOf(
+                                    Color(0xFFE4003A).copy(alpha = com.patrykandpatrick.vico.core.DefaultAlpha.LINE_BACKGROUND_SHADER_START),
+                                    Color(0xFFE4003A).copy(alpha = com.patrykandpatrick.vico.core.DefaultAlpha.LINE_BACKGROUND_SHADER_END)
+                                )
+
+                                else -> listOf(
+                                    Color.Green.copy(alpha = com.patrykandpatrick.vico.core.DefaultAlpha.LINE_BACKGROUND_SHADER_START),
+                                    Color.Green.copy(alpha = com.patrykandpatrick.vico.core.DefaultAlpha.LINE_BACKGROUND_SHADER_END)
+                                )
+                            }
+                        )
                     )
                 )
             )
-        )
-    }
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(top = 120.dp)
-    ) {
+        }
 
-        Card(
+        Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(300.dp)
+                .padding(top = 120.dp)
         ) {
-            if (datasetForModel.isNotEmpty()) {
-                ProvideChartStyle {
-                    Chart(
-                        chart = lineChart(
-                            lines = datasetLIneSpec
-                        ),
-                        chartModelProducer = modelProducer,
-                        startAxis = rememberStartAxis(
-                            title = "Decibel Level",
-                            tickLength = 0.dp,
-                            valueFormatter = { value, _ ->
-                                ((value.toInt() + 1).toString())
-                            },
-                            itemPlacer = AxisItemPlacer.Vertical.default(
-                                maxItemCount = 6
-                            )
-                        ),
-                        bottomAxis = rememberBottomAxis(
-                            title = "Time(second)",
-                            tickLength = 0.dp,
-                            valueFormatter = { value, _ ->
-                                value.toInt().toString()
-                            },
-                            guideline = null
-                        ),
-//                        marker =  ,
-                        chartScrollState = scrollState,
-                        chartScrollSpec = scrollSpec,
-                        isZoomEnabled = true
-                    )
-                }
-            }
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceAround
+
+            Card(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(300.dp)
             ) {
-                TextButton(onClick = {
-                    if (!isRecording.value) {
-                        isRecording.value = true
-                        viewModel.startRecording()
+                if (datasetForModel.isNotEmpty() && datasetLIneSpec.isNotEmpty()) {
+                    ProvideChartStyle {
+                        Chart(
+                            chart = lineChart(
+                                lines = datasetLIneSpec
+                            ),
+                            chartModelProducer = modelProducer,
+                            startAxis = rememberStartAxis(
+                                title = "Decibel Level",
+                                tickLength = 0.dp,
+                                valueFormatter = { value, _ ->
+                                    ((value.toInt() + 1).toString())
+                                },
+                                itemPlacer = AxisItemPlacer.Vertical.default(
+                                    maxItemCount = 6
+                                )
+                            ),
+                            bottomAxis = rememberBottomAxis(
+                                title = "Time(second)",
+                                tickLength = 0.dp,
+                                valueFormatter = { value, _ ->
+                                    value.toInt().toString()
+                                },
+                                guideline = null
+                            ),
+//                        marker =  ,
+                            chartScrollState = scrollState,
+                            chartScrollSpec = scrollSpec,
+                            isZoomEnabled = true
+                        )
                     }
-
-                }) {
-                    Text(text = if (isRecording.value) "Recording..." else "Start")
                 }
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceAround
+                ) {
+                    TextButton(onClick = {
+                        if (!isRecording.value) {
+                            isRecording.value = true
+                            viewModel.startRecording()
+                        }
 
-
-
-                TextButton(onClick = {
-                    if (isRecording.value) {
-                        isRecording.value = false
-                        viewModel.stopRecording()
-
-                        datasetForModel.clear()
-//                        datasetLIneSpec.clear()
-                        modelProducer.setEntries(emptyList<List<ChartEntry>>())
+                    }) {
+                        Text(text = if (isRecording.value) "Recording..." else "Start")
                     }
-                }) {
-                    Text(text = "Stop")
+
+
+
+                    TextButton(onClick = {
+                        if (isRecording.value) {
+                            isRecording.value = false
+
+                            viewModel.stopRecording()
+
+                            datasetForModel.clear()
+                            datasetLIneSpec = emptyList()
+                            modelProducer.setEntries(emptyList<List<ChartEntry>>())
+                            xPos = 0f
+                            Log.d("GraphUi", "Dataset Size after clear: ${datasetForModel.size}")
+                        }
+                    }) {
+                        Text(text = "Stop")
+                    }
                 }
             }
         }
     }
-}

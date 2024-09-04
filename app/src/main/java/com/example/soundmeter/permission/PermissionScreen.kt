@@ -61,6 +61,7 @@ fun PermissionScreen() {
         if (hasAudioRecordPermission) {
             //UI변경하기
             GraphUi()
+            PulsatingCircles()
 
         } else {
             Text(

@@ -68,7 +68,8 @@ fun PulsatingCircles() {
 
     LaunchedEffect(Unit) {
         viewModel.decibelFlow.collect { db ->
-            value = db
+
+            if (db > 0) value = db
         }
     }
 

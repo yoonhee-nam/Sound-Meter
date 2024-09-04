@@ -76,7 +76,12 @@ class SoundMeterRepositoryImpl @Inject constructor(
                 }
 
                 val rms = kotlin.math.sqrt(sum / readSize)
-                val db = 20 * log10(rms)
+                val db = if (rms > 0) {
+                    20 * log10(rms)
+                } else {
+                    0.0
+                }
+
 
 //            delay(1000L)
 //            val amplitude = it.maxAmplitude
