@@ -36,14 +36,15 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.example.soundmeter.sound_meter.SoundMeterViewModel
 
 @Composable
-fun Circle (
+fun Circle(
     size: Dp,
     color: Color = Color.White,
     borderWidth: Dp = 0.dp,
     borderColor: Color = Color.LightGray.copy(alpha = 0.0f)
-){
+) {
     var modifier = Modifier
 
     Box(
@@ -59,21 +60,21 @@ fun Circle (
 @Composable
 fun PulsatingCircles() {
     var value by remember { mutableStateOf(0.0) }
-//    val viewModel: RecodingViewModel = hiltViewModel()
-
-//    LaunchedEffect(Unit) {
-//        viewModel.startRecording()
-//    }
+    val viewModel: SoundMeterViewModel = hiltViewModel()
 
     LaunchedEffect(Unit) {
-//        viewModel.decibelFlow.collect { db ->
-//            value = db
-//        }
+        viewModel.startRecording()
+    }
+
+    LaunchedEffect(Unit) {
+        viewModel.decibelFlow.collect { db ->
+            value = db
+        }
     }
 
     DisposableEffect(Unit) {
         onDispose {
-//            viewModel.stopRecording()
+            viewModel.stopRecording()
         }
     }
 
@@ -109,22 +110,22 @@ fun PulsatingCircles() {
         when (value.toInt()) {
             in 0..40 -> Color(0xFF9BEC00)
             in 41..70 -> Color(0xFFF6FB7A)
-            in 71 .. 89 -> Color(0xFFFF6500)
-                     in 91 .. 120 -> Color(0xFFC40C0C)
+            in 71..89 -> Color(0xFFFF6500)
+            in 91..1000 -> Color(0xFFC40C0C)
             else -> Color.Green
         },
         when (value.toInt()) {
             in 0..40 -> Color(0xFF06D001)
             in 41..70 -> Color.Yellow
-            in 71 .. 89 -> Color(0xFFFC4100)
-            in 91 .. 120 -> Color(0xFFE4003A)
+            in 71..89 -> Color(0xFFFC4100)
+            in 91..1000 -> Color(0xFFE4003A)
             else -> Color.Green
         },
         when (value.toInt()) {
             in 0..40 -> Color(0xFF059212)
             in 41..70 -> Color(0xFFFFDB5C)
-            in 71 .. 89 -> Color(0xFFFF8F00)
-            in 91 .. 120 -> Color.Red
+            in 71..89 -> Color(0xFFFF8F00)
+            in 91..1000 -> Color.Red
             else -> Color.Green
         }
     )
