@@ -62,9 +62,9 @@ fun PulsatingCircles() {
     var value by remember { mutableStateOf(0.0) }
     val viewModel: SoundMeterViewModel = hiltViewModel()
 
-    LaunchedEffect(Unit) {
-        viewModel.startRecording()
-    }
+//    LaunchedEffect(Unit) {
+//        viewModel.startRecording()
+//    }
 
     LaunchedEffect(Unit) {
         viewModel.decibelFlow.collect { db ->
@@ -72,11 +72,11 @@ fun PulsatingCircles() {
         }
     }
 
-    DisposableEffect(Unit) {
-        onDispose {
-            viewModel.stopRecording()
-        }
-    }
+//    DisposableEffect(Unit) {
+//        onDispose {
+//            viewModel.stopRecording()
+//        }
+//    }
 
 
     val infiniteTransition = rememberInfiniteTransition()
