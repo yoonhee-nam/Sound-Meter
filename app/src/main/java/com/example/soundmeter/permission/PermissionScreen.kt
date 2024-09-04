@@ -24,12 +24,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
-import com.example.soundmeter.GreetingPreview
+import com.example.soundmeter.screen.GraphUi
 import com.example.soundmeter.screen.PulsatingCircles
 
 @Composable
 fun PermissionScreen() {
-
 
     val context = LocalContext.current
 
@@ -61,15 +60,17 @@ fun PermissionScreen() {
     ) {
         if (hasAudioRecordPermission) {
             //UI변경하기
-            PulsatingCircles()
+            GraphUi()
 
         } else {
-
-            Text(modifier = Modifier.padding(top = 130.dp,start = 20.dp ,end = 20.dp),
-                text="권한이 필요합니다. 이 앱은 음성을 녹음하기 위해 권한이 필요합니다.", style = MaterialTheme.typography.bodyLarge)
+            Text(
+                modifier = Modifier.padding(top = 130.dp, start = 20.dp, end = 20.dp),
+                text = "권한이 필요합니다. 이 앱은 음성을 녹음하기 위해 권한이 필요합니다.",
+                style = MaterialTheme.typography.bodyLarge
+            )
             TextButton(
-                onClick = { moveToSetting(context)},
-                modifier = Modifier.padding(top = 16.dp,start=20.dp)
+                onClick = { moveToSetting(context) },
+                modifier = Modifier.padding(top = 16.dp, start = 20.dp)
             ) {
                 Text("권한 요청 다시 시도")
             }

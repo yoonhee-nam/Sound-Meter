@@ -1,7 +1,6 @@
 package com.example.soundmeter.sound_meter
 
 import android.app.Application
-import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -27,7 +26,6 @@ class SoundMeterViewModel @Inject constructor(
     fun stopRecording(){
         soundMeterRepository.stopRecording()
     }
-
     private fun startDecibeUpdates(){
         viewModelScope.launch {
             soundMeterRepository.getDbFlow().collect{ db ->
@@ -35,5 +33,4 @@ class SoundMeterViewModel @Inject constructor(
             }
         }
     }
-
 }
