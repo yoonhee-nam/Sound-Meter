@@ -110,21 +110,21 @@ fun PulsatingCircles() {
         when (value.toInt()) {
             in 0..40 -> Color(0xFF9BEC00)
             in 41..70 -> Color(0xFFF6FB7A)
-            in 71..89 -> Color(0xFFFF6500)
+            in 71..90 -> Color(0xFFFF6500)
             in 91..1000 -> Color(0xFFC40C0C)
             else -> Color.Green
         },
         when (value.toInt()) {
             in 0..40 -> Color(0xFF06D001)
             in 41..70 -> Color.Yellow
-            in 71..89 -> Color(0xFFFC4100)
+            in 71..90 -> Color(0xFFFC4100)
             in 91..1000 -> Color(0xFFE4003A)
             else -> Color.Green
         },
         when (value.toInt()) {
             in 0..40 -> Color(0xFF059212)
             in 41..70 -> Color(0xFFFFDB5C)
-            in 71..89 -> Color(0xFFFF8F00)
+            in 71..90 -> Color(0xFFFF8F00)
             in 91..1000 -> Color.Red
             else -> Color.Green
         }

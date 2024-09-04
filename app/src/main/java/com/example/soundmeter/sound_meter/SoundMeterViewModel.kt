@@ -31,7 +31,6 @@ class SoundMeterViewModel @Inject constructor(
     private fun startDecibeUpdates(){
         viewModelScope.launch {
             soundMeterRepository.getDbFlow().collect{ db ->
-                Log.d("ViewModel", "Decibel level updated: $db")
                 _decibelFlow.value = db
             }
         }
