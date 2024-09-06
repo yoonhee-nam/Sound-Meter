@@ -8,12 +8,9 @@ import android.media.MediaRecorder
 import android.util.Log
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
-import java.io.File
 import javax.inject.Inject
 import kotlin.math.log10
 
@@ -82,14 +79,6 @@ class SoundMeterRepositoryImpl @Inject constructor(
                     0.0
                 }
 
-
-//            delay(1000L)
-//            val amplitude = it.maxAmplitude
-//            val db = if (amplitude > 0) {
-//                20 * kotlin.math.log10(amplitude.toDouble())
-//            } else {
-//                0.0
-//            }
                 emit(db)
             }
         }
