@@ -4,6 +4,7 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -14,22 +15,32 @@ import javax.inject.Inject
 class SoundMeterViewModel @Inject constructor(
     private val soundMeterRepository: SoundMeterRepository,
     application: Application
-) : AndroidViewModel(application){
+) : AndroidViewModel(application) {
 
     private val _decibelFlow = MutableStateFlow(0.0)
     val decibelFlow: StateFlow<Double> = _decibelFlow.asStateFlow()
 
-    fun startRecording(){
+    private var decibelUpdatesJob: Job? = null
+
+    fun startRecording() {
         soundMeterRepository.startRecording()
         startDecibeUpdates()
     }
-    fun stopRecording(){
+
+    fun stopRecording() {
         soundMeterRepository.stopRecording()
+        decibelUpdatesJob?.cancel()
+
     }
-    private fun startDecibeUpdates(){
+
+    private fun startDecibeUpdates() {
         viewModelScope.launch {
-            soundMeterRepository.getDbFlow().collect{ db ->
-                _decibelFlow.value = db
+            decibelUpdatesJob?.cancel()
+
+            decibelUpdatesJob = viewModelScope.launch {
+                soundMeterRepository.getDbFlow().collect { db ->
+                    _decibelFlow.value = db
+                }
             }
         }
     }

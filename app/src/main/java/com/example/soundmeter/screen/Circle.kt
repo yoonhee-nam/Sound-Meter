@@ -68,7 +68,8 @@ fun PulsatingCircles() {
 
     LaunchedEffect(Unit) {
         viewModel.decibelFlow.collect { db ->
-            value = db
+
+            if (db > 0) value = db
         }
     }
 
@@ -79,7 +80,7 @@ fun PulsatingCircles() {
 //    }
 
 
-    val infiniteTransition = rememberInfiniteTransition()
+    val infiniteTransition = rememberInfiniteTransition(label = "")
     val size by infiniteTransition.animateValue(
         initialValue = 200.dp,
         targetValue = 190.dp,
