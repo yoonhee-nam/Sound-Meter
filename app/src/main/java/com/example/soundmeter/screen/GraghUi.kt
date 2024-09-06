@@ -90,7 +90,7 @@ fun GraphUi() {
                                 value = dbValue
                                 xPos += 1f
                             }
-                            delay(1000)
+                            delay(500)
                             Log.d("GraphUi","GraphUi Updated Dataset: ${datasetForModel.joinToString()}"
                             )
                         }
@@ -120,7 +120,7 @@ fun GraphUi() {
                     in 41..70 -> Color.Yellow.toArgb()
                     in 71..90 -> Color(0xFFFC4100).toArgb()
                     in 91..1000 -> Color(0xFFE4003A).toArgb()
-                    else -> Color.Green.toArgb()
+                    else -> Green.toArgb()
                 },
                 lineBackgroundShader = DynamicShaders.fromBrush(
                     brush = Brush.verticalGradient(

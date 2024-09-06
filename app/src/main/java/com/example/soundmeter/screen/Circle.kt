@@ -80,7 +80,7 @@ fun PulsatingCircles() {
 //    }
 
 
-    val infiniteTransition = rememberInfiniteTransition()
+    val infiniteTransition = rememberInfiniteTransition(label = "")
     val size by infiniteTransition.animateValue(
         initialValue = 200.dp,
         targetValue = 190.dp,

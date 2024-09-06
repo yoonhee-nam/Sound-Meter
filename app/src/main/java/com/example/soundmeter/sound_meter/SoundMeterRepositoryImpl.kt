@@ -8,9 +8,12 @@ import android.media.MediaRecorder
 import android.util.Log
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
+import java.io.File
 import javax.inject.Inject
 import kotlin.math.log10
 
@@ -25,28 +28,32 @@ class SoundMeterRepositoryImpl @Inject constructor(
         AudioFormat.ENCODING_PCM_16BIT
     )
 
-    private var audioRecord: AudioRecord? = null
-//    private var recorder: MediaRecorder? = null
+    private var recorder: MediaRecorder? = null
 
-    @SuppressLint("MissingPermission")
+
+
     override fun startRecording() {
-        if (audioRecord == null || audioRecord?.state != AudioRecord.STATE_INITIALIZED) {
-            audioRecord = AudioRecord(
-                MediaRecorder.AudioSource.MIC,
-                sampleRate,
-                AudioFormat.CHANNEL_IN_MONO,
-                AudioFormat.ENCODING_PCM_16BIT,
-                bufferSize
-            )
-        }
+        if (recorder == null) {
+            recorder = MediaRecorder().apply {
+                setAudioSource(MediaRecorder.AudioSource.MIC)
+                setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP)
+                setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB)
+                setOutputFile(getOutputFile().absolutePath)
 
-        audioRecord?.startRecording()
+                try {
+                    prepare()
+                    start()
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                }
+            }
+        }
     }
 
 
     override fun stopRecording() {
         try {
-            audioRecord?.apply {
+            recorder?.apply {
                 stop()
                 release()
             }
@@ -57,34 +64,31 @@ class SoundMeterRepositoryImpl @Inject constructor(
             Log.e("RecordingRepositoryImpl", "RuntimeException during stop: ${e.message}")
             e.printStackTrace()
         } finally {
-            audioRecord = null
+            recorder = null
+
         }
     }
 
     override fun getDbFlow(): Flow<Double> = flow {
-        val buffer = ShortArray(bufferSize)
-        audioRecord?.let {
+        recorder?.let {
             while (true) {
-                val readSize = it.read(buffer, 0, bufferSize)
+                delay(100L)
+                val amplitude = it.maxAmplitude
 
-                var sum = 0.0
-                for (i in 0 until readSize) {
-                    sum += buffer[i] * buffer[i].toDouble()
-                }
-
-                val rms = kotlin.math.sqrt(sum / readSize)
-                val db = if (rms > 0) {
-                    20 * log10(rms)
+                val db = if (amplitude > 0) {
+                    20 * log10(amplitude.toDouble())
                 } else {
                     0.0
                 }
-
                 emit(db)
+                Log.d("getDbFlow", "getDbFlow: $db")
             }
         }
-    }.flowOn(Dispatchers.Default)
+    }.catch { e ->
+        e.printStackTrace()
+    }
+
+    private fun getOutputFile(): File {
+        return File(context.filesDir, "recording.3gp")
+    }
 }
-//
-//private fun getOutputFile(): File {
-//    return File(context.filesDir, "recording.3gp")
-//}
