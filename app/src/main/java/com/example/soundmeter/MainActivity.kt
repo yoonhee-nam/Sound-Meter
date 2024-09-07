@@ -14,6 +14,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.soundmeter.permission.PermissionScreen
+import com.example.soundmeter.screen.ClockPreview
 import com.example.soundmeter.screen.ClockStyle
 import com.example.soundmeter.screen.Meter
 import com.example.soundmeter.ui.theme.SoundMeterTheme
@@ -22,12 +23,13 @@ import java.time.LocalTime
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
             SoundMeterTheme {
-                Meter(Modifier,ClockStyle(),1,2,3)
+                ClockPreview()
 //                PermissionScreen()
 //                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
 //                    Greeting(

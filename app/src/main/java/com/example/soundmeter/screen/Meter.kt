@@ -10,8 +10,12 @@ import androidx.compose.material3.Surface
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Rect
+import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
+import androidx.compose.ui.graphics.drawscope.clipPath
+import androidx.compose.ui.graphics.drawscope.clipRect
 import androidx.compose.ui.graphics.nativeCanvas
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.tooling.preview.Preview
@@ -22,9 +26,9 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.time.LocalTime
 import java.util.concurrent.TimeUnit
+import kotlin.io.path.Path
 import kotlin.math.cos
 import kotlin.math.sin
-
 
 @Composable
 fun Meter (
@@ -35,177 +39,115 @@ fun Meter (
     second: Int
 ) {
     Canvas(modifier = modifier) {
-        // 시계 배경
-        val radius: Float = size.minDimension / 2.0f // 원의 반지름
-        drawContext.canvas.nativeCanvas.apply {
-            this.drawCircle(
-                center.x,
-                center.y,
-                radius,
-                Paint().apply {
-                    color = android.graphics.Color.WHITE
-                    setShadowLayer(
-                        clockStyle.shadowRadius.toPx(),
-                        0f,
-                        0f,
-                        clockStyle.shadowColor.toArgb()
-                    )
-                }
+        // 설정된 각도
+        val startAngle = 160f
+        val sweepAngle = 220f
+
+        // 중심점과 반지름 설정
+        val radius: Float = size.minDimension / 2.0f
+        val centerX = center.x
+        val centerY = center.y
+
+        // 클립 패스를 사용하여 특정 각도로 잘라내기
+        val clipPath = androidx.compose.ui.graphics.Path().apply {
+            arcTo(
+                rect = Rect(
+                    centerX - radius,
+                    centerY - radius,
+                    centerX + radius,
+                    centerY + radius
+                ),
+                startAngleDegrees = startAngle,
+                sweepAngleDegrees = sweepAngle,
+                forceMoveTo = true
             )
+            lineTo(centerX, centerY)
+            close()
         }
 
-        // 중심점
-        drawCircle(
-            radius = clockStyle.centerCircleSize.toPx(),
-            color = clockStyle.centerCircleColor
-        )
+        // 클립 패스를 적용하여 화면을 자름
+        clipPath(clipPath) {
+            // 눈금 및 숫자 그리기
+            val gradationCount = 101
+            repeat(gradationCount) { index ->
+                val angleInDegree = startAngle + (index * sweepAngle / (gradationCount-1).toDouble())
+                val angleInRadian = Math.toRadians(angleInDegree)
 
-        // 시계 눈금
-        val gradationCount = 100 // 시계눈금 갯수
-        repeat(gradationCount) { index ->
-            val angleInDegree = (index * 360 / gradationCount).toDouble()
-            val angleInRadian = Math.toRadians(angleInDegree)
+                val isMajorGradation = index % 10 == 0
+                val isMidGradation = index % 5 == 0 && !isMajorGradation
 
-            val isHourGradation = index % 5 == 0
-            val length = if (isHourGradation) {
-                clockStyle.hourGradationLength.toPx()
-            } else {
-                clockStyle.minuteGradationLength.toPx()
-            }
+                val length = when {
+                    isMajorGradation -> clockStyle.hourGradationLength.toPx() // 긴 눈금
+                    isMidGradation -> clockStyle.minuteGradationLength.toPx() * 1.7f // 중간 눈금
+                    else -> clockStyle.minuteGradationLength.toPx() * 1.0f // 짧은 눈금
+                }
 
-            val start = Offset(
-                x = (center.x + (radius - length) * cos(angleInRadian)).toFloat(),
-                y = (center.y + (radius - length) * sin(angleInRadian)).toFloat()
-            )
-            val end = Offset(
-                x = (center.x + radius * cos(angleInRadian)).toFloat(),
-                y = (center.y + radius * sin(angleInRadian)).toFloat()
-            )
-            val gradationColor: Color = if (isHourGradation) {
-                clockStyle.hourGradationColor
-            } else {
-                clockStyle.minuteGradationColor
-            }
+                val start = Offset(
+                    x = (centerX + (radius - length) * cos(angleInRadian)).toFloat(),
+                    y = (centerY + (radius - length) * sin(angleInRadian)).toFloat()
+                )
+                val end = Offset(
+                    x = (centerX + radius * cos(angleInRadian)).toFloat(),
+                    y = (centerY + radius * sin(angleInRadian)).toFloat()
+                )
 
-            val gradationWidth: Dp = if (isHourGradation) {
-                clockStyle.hourGradationWidth
-            } else {
-                clockStyle.minuteGradationWidth
-            }
+                // 눈금 그리기
+                drawLine(
+                    color = if (isMajorGradation) clockStyle.hourGradationColor else clockStyle.minuteGradationColor,
+                    start = start,
+                    end = end,
+                    strokeWidth = if (isMajorGradation) clockStyle.hourGradationWidth.toPx() else clockStyle.minuteGradationWidth.toPx()
+                )
 
-            //시,분 눈금 그리기
-            drawLine(
-                color = gradationColor,
-                start = start,
-                end = end,
-                strokeWidth = gradationWidth.toPx()
-            )
-
-            // 1~12시 텍스트 그리기
-            drawContext.canvas.nativeCanvas.apply {
-                if (index % 5 == 0) {
-                    var hourText = (index / 5 + 3) % 12
-                    if (hourText == 0) {
-                        hourText = 12
-                    }
-                    val textSize = clockStyle.textSize.toPx()
-                    val textRadius = radius - length - textSize
-                    val x = textRadius * cos(angleInRadian) + center.x
-                    val y = textRadius * sin(angleInRadian) + center.y + textSize / 2f
-                    drawText(
-                        "$hourText",
+                // 10마다 숫자 표시
+                if (isMajorGradation) {
+                    val textRadius = radius - length - clockStyle.textSize.toPx() *0.4
+                    val x = textRadius * cos(angleInRadian) + centerX
+                    val y = textRadius * sin(angleInRadian) + centerY + clockStyle.textSize.toPx() / 2f
+                    drawContext.canvas.nativeCanvas.drawText(
+                        "${index}",
                         x.toFloat(),
                         y.toFloat(),
                         Paint().apply {
-                            this.color = clockStyle.textColor.toArgb()
-                            this.textSize = textSize
-                            this.textAlign = Paint.Align.CENTER
+                            color = clockStyle.textColor.toArgb()
+                            textSize = (clockStyle.textSize.toPx() * 0.8).toFloat()
+                            textAlign = Paint.Align.CENTER
                         }
                     )
                 }
             }
+
+            // 중심점 그리기
+            drawCircle(
+                radius = clockStyle.centerCircleSize.toPx(),
+                color = clockStyle.centerCircleColor,
+                center = Offset(centerX, centerY)
+            )
+
+            // 분침 그리기
+            val minuteAngleIncrement = sweepAngle / 100.0 // 분침을 0~100으로 나누어 범위 설정
+            val minuteHandInDegree = startAngle + minute * minuteAngleIncrement
+            val minuteHandInRadian = Math.toRadians(minuteHandInDegree)
+            val minuteLineEnd = Offset(
+                x = (centerX + clockStyle.minuteHandLength.toPx() * cos(minuteHandInRadian)).toFloat(),
+                y = (centerY + clockStyle.minuteHandLength.toPx() * sin(minuteHandInRadian)).toFloat()
+            )
+
+            drawLine(
+                color = clockStyle.minuteHandColor,
+                start = Offset(centerX, centerY),
+                end = minuteLineEnd,
+                strokeWidth = clockStyle.minuteHandWidth.toPx(),
+                cap = StrokeCap.Round
+            )
         }
-
-        // 시침 그리기(Hour hand)
-        val hourAngleIncrement = 360.0/12.0
-        val hourHandInDegree = (
-                -90 // 12시부터 시작하도록 90도 꺾음
-                        + hour * hourAngleIncrement
-                        + hourAngleIncrement * minute.toDouble() / TimeUnit.HOURS.toMinutes(1)
-                        + hourAngleIncrement * second.toDouble() / TimeUnit.HOURS.toSeconds(1)
-                )
-        val hourHandInRadian = Math.toRadians(hourHandInDegree)
-        val hourHandStart = Offset(
-            x = center.x,
-            y = center.y
-        )
-        val hourHandEnd = Offset(
-            x = (center.x + clockStyle.hourHandLength.toPx() * cos(hourHandInRadian)).toFloat(),
-            y = (center.y + clockStyle.hourHandLength.toPx() * sin(hourHandInRadian)).toFloat()
-        )
-        drawLine(
-            color = clockStyle.hourHandColor,
-            start = hourHandStart,
-            end = hourHandEnd,
-            strokeWidth = clockStyle.hourHandWidth.toPx(),
-            cap = StrokeCap.Round
-        )
-
-        // 분침 그리기(Minute hand)
-        val minuteAngleIncrement = 360.0/60.0
-        val minuteHandInDegree = (
-                -90 // 90도 꺾음
-                        + minuteAngleIncrement * minute.toDouble()
-                        + minuteAngleIncrement * second.toDouble() / TimeUnit.MINUTES.toSeconds(1)
-                )
-
-        val minuteHandInRadian = Math.toRadians(minuteHandInDegree)
-
-        val minuteLineStart = Offset(
-            x = center.x,
-            y = center.y
-        )
-        val minuteLineEnd = Offset(
-            x = (center.x + clockStyle.minuteHandLength.toPx() * cos(minuteHandInRadian)).toFloat(),
-            y = (center.y + clockStyle.minuteHandLength.toPx() * sin(minuteHandInRadian)).toFloat()
-        )
-
-        drawLine(
-            color = clockStyle.minuteHandColor,
-            start = minuteLineStart,
-            end = minuteLineEnd,
-            strokeWidth = clockStyle.minuteHandWidth.toPx(),
-            cap = StrokeCap.Round
-        )
-
-        // 초침 그리기 (Second hand)
-        val secondAngleIncrement = 360.0/60.0
-        val secondInDegree = -90 + secondAngleIncrement * second.toDouble()
-        val secondInRadian = Math.toRadians(secondInDegree)
-        val secondLineStart = Offset(
-            x = center.x,
-            y = center.y
-        )
-        val secondLineEnd = Offset(
-            x = (center.x + clockStyle.secondHandLength.toPx() * cos(secondInRadian)).toFloat(),
-            y = (center.y + clockStyle.secondHandLength.toPx() * sin(secondInRadian)).toFloat()
-        )
-
-        drawLine(
-            color = clockStyle.secondHandColor,
-            start = secondLineStart,
-            end = secondLineEnd,
-            strokeWidth = clockStyle.secondHandWidth.toPx(),
-            cap = StrokeCap.Round
-        )
     }
 }
-
 @SuppressLint("CoroutineCreationDuringComposition")
 @RequiresApi(Build.VERSION_CODES.O)
 @Preview
 @Composable
-private fun ClockPreview() {
+ fun ClockPreview() {
     var currentTime by remember { mutableStateOf(LocalTime.now()) }
     val coroutineScope = rememberCoroutineScope()
     coroutineScope.launch(Dispatchers.IO) {
