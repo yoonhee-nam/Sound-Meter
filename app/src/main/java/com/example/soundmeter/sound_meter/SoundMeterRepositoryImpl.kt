@@ -30,8 +30,6 @@ class SoundMeterRepositoryImpl @Inject constructor(
 
     private var recorder: MediaRecorder? = null
 
-
-
     override fun startRecording() {
         if (recorder == null) {
             recorder = MediaRecorder().apply {
