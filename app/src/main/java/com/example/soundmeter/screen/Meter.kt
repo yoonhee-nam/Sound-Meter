@@ -70,7 +70,8 @@ fun Meter (
             // 눈금 및 숫자 그리기
             val gradationCount = 101
             repeat(gradationCount) { index ->
-                val angleInDegree = startAngle + (index * sweepAngle / (gradationCount-1).toDouble())
+                val angleInDegree =
+                    startAngle + (index * sweepAngle / (gradationCount - 1).toDouble())
                 val angleInRadian = Math.toRadians(angleInDegree)
 
                 val isMajorGradation = index % 10 == 0
@@ -98,24 +99,32 @@ fun Meter (
                     end = end,
                     strokeWidth = if (isMajorGradation) clockStyle.hourGradationWidth.toPx() else clockStyle.minuteGradationWidth.toPx()
                 )
-
-                // 10마다 숫자 표시
-                if (isMajorGradation) {
-                    val textRadius = radius - length - clockStyle.textSize.toPx() *0.4
-                    val x = textRadius * cos(angleInRadian) + centerX
-                    val y = textRadius * sin(angleInRadian) + centerY + clockStyle.textSize.toPx() / 2f
-                    drawContext.canvas.nativeCanvas.drawText(
-                        "${index}",
-                        x.toFloat(),
-                        y.toFloat(),
-                        Paint().apply {
-                            color = clockStyle.textColor.toArgb()
-                            textSize = (clockStyle.textSize.toPx() * 0.8).toFloat()
-                            textAlign = Paint.Align.CENTER
-                        }
-                    )
-                }
             }
+        }
+
+        //text
+        val gradationCount = 101
+        repeat(gradationCount) { index ->
+            if (index % 10 == 0) {
+                val angleInDegree = startAngle + (index * sweepAngle / (gradationCount - 1).toDouble())
+                val angleInRadian = Math.toRadians(angleInDegree)
+
+                val textRadius = radius - clockStyle.textSize.toPx() * 1.7f
+                val x = textRadius * cos(angleInRadian) + centerX
+                val y = textRadius * sin(angleInRadian) + centerY + clockStyle.textSize.toPx() / 3f
+
+                drawContext.canvas.nativeCanvas.drawText(
+                    "${index}",
+                    x.toFloat(),
+                    y.toFloat(),
+                    Paint().apply {
+                        color = clockStyle.textColor.toArgb()
+                        textSize = (clockStyle.textSize.toPx() * 0.8).toFloat()
+                        textAlign = Paint.Align.CENTER
+                    }
+                )
+            }
+        }
 
             // 중심점 그리기
             drawCircle(
@@ -125,6 +134,7 @@ fun Meter (
             )
 
             // 분침 그리기
+
             val minuteAngleIncrement = sweepAngle / 100.0 // 분침을 0~100으로 나누어 범위 설정
             val minuteHandInDegree = startAngle + minute * minuteAngleIncrement
             val minuteHandInRadian = Math.toRadians(minuteHandInDegree)
@@ -142,7 +152,7 @@ fun Meter (
             )
         }
     }
-}
+
 @SuppressLint("CoroutineCreationDuringComposition")
 @RequiresApi(Build.VERSION_CODES.O)
 @Preview
