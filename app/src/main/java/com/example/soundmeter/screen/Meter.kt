@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.geometry.Size
@@ -21,6 +22,8 @@ import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import com.example.soundmeter.sound_meter.SoundMeterViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -30,21 +33,23 @@ import kotlin.io.path.Path
 import kotlin.math.cos
 import kotlin.math.sin
 
+
 @Composable
-fun Meter (
+fun Meter(
     modifier: Modifier = Modifier,
     clockStyle: ClockStyle = ClockStyle(),
-    hour: Int,
-    minute: Int,
-    second: Int
+//    decibel: Double
+    viewModel: SoundMeterViewModel = hiltViewModel()
 ) {
+    val decibel by viewModel.decibelFlow.collectAsState(initial = 0.0)
+
     Canvas(modifier = modifier) {
         // 설정된 각도
         val startAngle = 160f
         val sweepAngle = 220f
 
         // 중심점과 반지름 설정
-        val radius: Float = size.minDimension / 2.0f
+        val radius: Float = (size.minDimension / 2.5f).coerceAtLeast(500f)
         val centerX = center.x
         val centerY = center.y
 
@@ -106,7 +111,8 @@ fun Meter (
         val gradationCount = 101
         repeat(gradationCount) { index ->
             if (index % 10 == 0) {
-                val angleInDegree = startAngle + (index * sweepAngle / (gradationCount - 1).toDouble())
+                val angleInDegree =
+                    startAngle + (index * sweepAngle / (gradationCount - 1).toDouble())
                 val angleInRadian = Math.toRadians(angleInDegree)
 
                 val textRadius = radius - clockStyle.textSize.toPx() * 1.7f
@@ -126,54 +132,61 @@ fun Meter (
             }
         }
 
-            // 중심점 그리기
-            drawCircle(
-                radius = clockStyle.centerCircleSize.toPx(),
-                color = clockStyle.centerCircleColor,
-                center = Offset(centerX, centerY)
-            )
+        // 중심점 그리기
+        drawCircle(
+            radius = clockStyle.centerCircleSize.toPx(),
+            color = clockStyle.centerCircleColor,
+            center = Offset(centerX, centerY)
+        )
 
-            // 분침 그리기
+        // 분침 그리기
 
-            val minuteAngleIncrement = sweepAngle / 100.0 // 분침을 0~100으로 나누어 범위 설정
-            val minuteHandInDegree = startAngle + minute * minuteAngleIncrement
-            val minuteHandInRadian = Math.toRadians(minuteHandInDegree)
-            val minuteLineEnd = Offset(
-                x = (centerX + clockStyle.minuteHandLength.toPx() * cos(minuteHandInRadian)).toFloat(),
-                y = (centerY + clockStyle.minuteHandLength.toPx() * sin(minuteHandInRadian)).toFloat()
-            )
+        val decibelAngleIncrement = sweepAngle / 100.0 // 분침을 0~100으로 나누어 범위 설정
+        val decibelHandInDegree = startAngle + decibel * decibelAngleIncrement
+        val decibelHandInRadian = Math.toRadians(decibelHandInDegree)
+        val decibelLineEnd = Offset(
+            x = (centerX + clockStyle.minuteHandLength.toPx() * cos(decibelHandInRadian)).toFloat(),
+            y = (centerY + clockStyle.minuteHandLength.toPx() * sin(decibelHandInRadian)).toFloat()
+        )
 
-            drawLine(
-                color = clockStyle.minuteHandColor,
-                start = Offset(centerX, centerY),
-                end = minuteLineEnd,
-                strokeWidth = clockStyle.minuteHandWidth.toPx(),
-                cap = StrokeCap.Round
-            )
-        }
-    }
+        drawLine(
+            color = clockStyle.minuteHandColor,
+            start = Offset(centerX, centerY),
+            end = decibelLineEnd,
+            strokeWidth = clockStyle.minuteHandWidth.toPx(),
+            cap = StrokeCap.Round
+        )
 
-@SuppressLint("CoroutineCreationDuringComposition")
-@RequiresApi(Build.VERSION_CODES.O)
-@Preview
-@Composable
- fun ClockPreview() {
-    var currentTime by remember { mutableStateOf(LocalTime.now()) }
-    val coroutineScope = rememberCoroutineScope()
-    coroutineScope.launch(Dispatchers.IO) {
-        while (true){
-            delay(500)
-            currentTime = LocalTime.now()
-        }
-    }
-    Surface(color = Color.White) {
-        Meter(
-            modifier = Modifier.size(300.dp),
-            clockStyle = ClockStyle(),
-            hour = currentTime.hour,
-            minute = currentTime.minute,
-            second = currentTime.second
+        val rectWidth = 150f
+        val rectHeight = 80f
+        val rectTop = centerY + 100f
+        val cornerRadius = 20f
+
+        drawRoundRect(
+            color = Color.Gray,
+            topLeft = Offset(centerX - rectWidth / 2, rectTop),
+            size = Size(rectWidth, rectHeight),
+            cornerRadius = CornerRadius(cornerRadius, cornerRadius)
+        )
+        val text = "${decibel.toInt()} dB"
+        drawContext.canvas.nativeCanvas.drawText(
+            text,
+            centerX,
+            rectTop + rectHeight / 2 + 15f,
+            Paint().apply {
+                color = Color.White.toArgb()
+                textSize = 40f
+                textAlign = Paint.Align.CENTER
+            }
         )
     }
+}
 
+@Preview(showBackground = true)
+@Composable
+fun MeterPreview() {
+    Meter(
+        modifier = Modifier.size(300.dp),
+        clockStyle = ClockStyle(),
+    )
 }

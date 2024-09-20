@@ -14,7 +14,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.soundmeter.permission.PermissionScreen
-import com.example.soundmeter.screen.ClockPreview
 import com.example.soundmeter.screen.ClockStyle
 import com.example.soundmeter.screen.Meter
 import com.example.soundmeter.ui.theme.SoundMeterTheme
@@ -29,8 +28,8 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             SoundMeterTheme {
-                ClockPreview()
-//                PermissionScreen()
+//                ClockPreview()
+                PermissionScreen()
 //                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
 //                    Greeting(
 //                        name = "Android",
