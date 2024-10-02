@@ -5,6 +5,7 @@ import androidx.compose.animation.core.spring
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -20,6 +21,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
@@ -52,7 +54,9 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 @Composable
-fun GraphUi() {
+fun GraphUi(
+    modifier: Modifier = Modifier,
+) {
     val viewModel: SoundMeterViewModel = hiltViewModel()
 
     var value by remember { mutableStateOf(0.0) }
@@ -159,7 +163,7 @@ fun GraphUi() {
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(top = 120.dp)
+            .padding(top = 20.dp)
     ) {
 
         Card(
@@ -199,9 +203,12 @@ fun GraphUi() {
                     )
                 }
             }
+            Spacer(modifier = Modifier.weight(1f))
+
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceAround
+                horizontalArrangement = Arrangement.SpaceAround,
+                verticalAlignment =  Alignment.Bottom
             ) {
                 TextButton(onClick = {
                     if (!isRecording.value) {
@@ -217,7 +224,6 @@ fun GraphUi() {
                     if (isRecording.value) {
                         isRecording.value = false
                         viewModel.stopRecording()
-
                         datasetForModel.clear()
                         datasetLIneSpec = emptyList()
                         modelProducer.setEntries(emptyList<List<ChartEntry>>())
