@@ -100,8 +100,9 @@ fun Meter(
                 )
 
                 // 눈금 그리기
+                val lineColor = if (index in 80..100) Color.Red else if (isMajorGradation) clockStyle.hourGradationColor else clockStyle.minuteGradationColor
                 drawLine(
-                    color = if (isMajorGradation) clockStyle.hourGradationColor else clockStyle.minuteGradationColor,
+                    color = lineColor,
                     start = start,
                     end = end,
                     strokeWidth = if (isMajorGradation) clockStyle.hourGradationWidth.toPx() else clockStyle.minuteGradationWidth.toPx()
@@ -166,7 +167,7 @@ fun Meter(
 
 
         drawRoundRect(
-            color = Color.Gray,
+            color = Color.Black,
             topLeft = Offset(centerX - rectWidth / 2, rectTop),
             size = Size(rectWidth, rectHeight),
             cornerRadius = CornerRadius(cornerRadius, cornerRadius)
@@ -178,7 +179,7 @@ fun Meter(
             centerX,
             rectTop + rectHeight / 2 + 30f,
             Paint().apply {
-                color = Color.Black.toArgb()
+                color = Color.White.toArgb()
                 textSize = 100f
                 textAlign = Paint.Align.CENTER
             }
