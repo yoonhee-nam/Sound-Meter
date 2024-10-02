@@ -5,6 +5,7 @@ import android.graphics.Paint
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.*
@@ -43,13 +44,14 @@ fun Meter(
 ) {
     val decibel by viewModel.decibelFlow.collectAsState(initial = 0.0)
 
-    Canvas(modifier = modifier) {
+    Canvas(modifier = modifier
+        .padding(top = 50.dp)) {
         // 설정된 각도
         val startAngle = 160f
         val sweepAngle = 220f
 
         // 중심점과 반지름 설정
-        val radius: Float = (size.minDimension / 2.5f).coerceAtLeast(500f)
+        val radius: Float = (size.minDimension / 2.5f).coerceAtLeast(450f)
         val centerX = center.x
         val centerY = center.y
 
@@ -157,10 +159,11 @@ fun Meter(
             cap = StrokeCap.Round
         )
 
-        val rectWidth = 150f
-        val rectHeight = 80f
+        val rectWidth = 300f
+        val rectHeight = 150f
         val rectTop = centerY + 100f
         val cornerRadius = 20f
+
 
         drawRoundRect(
             color = Color.Gray,
@@ -169,13 +172,14 @@ fun Meter(
             cornerRadius = CornerRadius(cornerRadius, cornerRadius)
         )
         val text = "${decibel.toInt()} dB"
+
         drawContext.canvas.nativeCanvas.drawText(
             text,
             centerX,
-            rectTop + rectHeight / 2 + 15f,
+            rectTop + rectHeight / 2 + 30f,
             Paint().apply {
-                color = Color.White.toArgb()
-                textSize = 40f
+                color = Color.Black.toArgb()
+                textSize = 100f
                 textAlign = Paint.Align.CENTER
             }
         )
