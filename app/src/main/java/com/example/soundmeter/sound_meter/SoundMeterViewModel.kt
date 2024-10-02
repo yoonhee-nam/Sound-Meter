@@ -92,4 +92,13 @@ class SoundMeterViewModel @Inject constructor(
             elapsedTime // 일시 정지된 경우의 경과 시간
         }
     }
+
+    fun getElapsedTimeInSeconds(): Long {
+        return if (isRecording) {
+            (System.currentTimeMillis() - recordStartTime) / 1000
+        } else {
+            0
+        }
+    }
+
 }

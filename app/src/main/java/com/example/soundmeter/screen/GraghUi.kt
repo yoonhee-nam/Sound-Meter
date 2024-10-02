@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -54,9 +55,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 @Composable
-fun GraphUi(
-    modifier: Modifier = Modifier,
-) {
+fun GraphUi() {
     val viewModel: SoundMeterViewModel = hiltViewModel()
 
     var value by remember { mutableStateOf(0.0) }
@@ -169,7 +168,11 @@ fun GraphUi(
         Card(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(300.dp)
+                .padding(start = 15.dp, end = 15.dp, top = 10.dp)
+                .height(250.dp),
+            colors = CardDefaults.cardColors(
+                containerColor = Color.Black
+            )
         ) {
             if (datasetForModel.isNotEmpty() && datasetLIneSpec.isNotEmpty()) {
                 ProvideChartStyle {
@@ -182,19 +185,19 @@ fun GraphUi(
                             title = "Decibel Level",
                             tickLength = 0.dp,
                             valueFormatter = { value, _ ->
-                                ((value.toInt() + 1).toString())
+                                ((value.toInt() ).toString())
                             },
                             itemPlacer = AxisItemPlacer.Vertical.default(
                                 maxItemCount = 6
-                            )
+                            ),
                         ),
                         bottomAxis = rememberBottomAxis(
                             title = "Time(second)",
                             tickLength = 0.dp,
                             valueFormatter = { value, _ ->
-                                value.toInt().toString()
+                                if((value/2) % 5 == 0f) (value/2).toInt().toString() else ""
                             },
-                            guideline = null
+
                         ),
 //                        marker =  ,
                         chartScrollState = scrollState,

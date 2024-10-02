@@ -54,7 +54,7 @@ fun DecibelText(
             (elapsedTime / 1000) % 60  // 초 계산
         )
         Text(elapsedTimeText, textAlign = TextAlign.Center, fontSize = 15.sp)
-        Text(dBLevel, textAlign = TextAlign.Center, fontSize = 30.sp)
+        Text(dBLevel, textAlign = TextAlign.Center, fontSize = 25.sp)
 
         val (minValue, avgValue, maxValue) = viewModel.getMinMaxAvgDecibel()
 
