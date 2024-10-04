@@ -5,6 +5,7 @@ import android.content.Context
 import android.media.AudioFormat
 import android.media.AudioRecord
 import android.media.MediaRecorder
+import android.os.Build
 import android.util.Log
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
@@ -20,13 +21,6 @@ import kotlin.math.log10
 class SoundMeterRepositoryImpl @Inject constructor(
     @ApplicationContext private val context: Context
 ) : SoundMeterRepository {
-
-    private val sampleRate = 44100
-    private val bufferSize = AudioRecord.getMinBufferSize(
-        sampleRate,
-        AudioFormat.CHANNEL_IN_MONO,
-        AudioFormat.ENCODING_PCM_16BIT
-    )
 
     private var recorder: MediaRecorder? = null
 
@@ -66,7 +60,6 @@ class SoundMeterRepositoryImpl @Inject constructor(
 
         }
     }
-
     override fun getDbFlow(): Flow<Double> = flow {
         recorder?.let {
             while (true) {

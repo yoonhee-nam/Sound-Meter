@@ -73,6 +73,7 @@ fun GraphUi() {
     )
 
     val isRecording = remember { mutableStateOf(false) }
+    val isPaused = remember { mutableStateOf(false) }
     val coroutineScope = rememberCoroutineScope()
     var xPos by remember { mutableStateOf(0f) }
     var recordingJob: Job? by remember { mutableStateOf(null) }
@@ -84,7 +85,7 @@ fun GraphUi() {
             recordingJob = coroutineScope.launch {
                 viewModel.decibelFlow.collect { dbValue ->
                     withContext(Dispatchers.Main) {
-                        if (dbValue > 0) {
+                        if (dbValue > 0 && !isPaused.value) {
                             withContext(Dispatchers.Default) {
                                 datasetForModel.add(FloatEntry(x = xPos, y = dbValue.toFloat()))
                             }
@@ -211,18 +212,29 @@ fun GraphUi() {
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceAround,
-                verticalAlignment =  Alignment.Bottom
+                verticalAlignment = Alignment.Bottom
             ) {
                 TextButton(onClick = {
                     if (!isRecording.value) {
                         isRecording.value = true
+                        isPaused.value = false
                         viewModel.startRecording()
                     }
-
                 }) {
-                    Text(text = if (isRecording.value) "Recording..." else "Start")
+                    Text(text = if (isRecording.value && !isPaused.value) "Recording..." else "Start")
                 }
 
+                TextButton(onClick = {
+                    if (isRecording.value && !isPaused.value) {
+                        isPaused.value = true
+                        viewModel.pauseRecording()
+                    } else if (isRecording.value && isPaused.value) {
+                        isPaused.value = false
+                        viewModel.resumeRecording()
+                    }
+                }) {
+                    Text(text = if (isPaused.value) "Resume" else "Pause")
+                }
                 TextButton(onClick = {
                     if (isRecording.value) {
                         isRecording.value = false
