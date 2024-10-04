@@ -76,6 +76,7 @@ fun Meter(
         clipPath(clipPath) {
             // 눈금 및 숫자 그리기
             val gradationCount = 101
+
             repeat(gradationCount) { index ->
                 val angleInDegree =
                     startAngle + (index * sweepAngle / (gradationCount - 1).toDouble())
