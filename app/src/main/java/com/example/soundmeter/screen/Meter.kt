@@ -50,7 +50,8 @@ fun Meter(
     val backgroundColor = if (isDarkMode) Color.Black else Color.White
     val lineColor = MaterialTheme.colorScheme.onBackground
     val textColor = MaterialTheme.colorScheme.onBackground
-    val minuteHandColor = MaterialTheme.colorScheme.onPrimary
+    val minuteHandColor = if (isDarkMode) Color.White else Color.Black
+    val boxColor = if (isDarkMode) Color.DarkGray else Color.LightGray
 
     val decibel by viewModel.decibelFlow.collectAsState(initial = 0.0)
 
@@ -182,7 +183,7 @@ fun Meter(
         val cornerRadius = 20f
 
         drawRoundRect(
-            color = backgroundColor,
+            color = boxColor,
             topLeft = Offset(centerX - rectWidth / 2, rectTop),
             size = Size(rectWidth, rectHeight),
             cornerRadius = CornerRadius(cornerRadius, cornerRadius)
