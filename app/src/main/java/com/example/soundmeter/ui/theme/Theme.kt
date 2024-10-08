@@ -9,18 +9,35 @@ import androidx.compose.material3.dynamicDarkColorScheme
 import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 
 private val DarkColorScheme = darkColorScheme(
     primary = Purple80,
     secondary = PurpleGrey80,
-    tertiary = Pink80
+    tertiary = Pink80,
+
+    background = Color.Black,         // 전체 배경 색상
+    surface = Color.Black,            // 표면(카드 등) 배경 색상
+    onPrimary = Color.White,          // primary 색상 위의 텍스트 색상
+    onSecondary = Color.White,        // secondary 색상 위의 텍스트 색상
+    onTertiary = Color.White,         // tertiary 색상 위의 텍스트 색상
+    onBackground = Color.White,       // 배경 색상 위의 텍스트 색상
+    onSurface = Color.White           // 표면 색상 위의 텍스트 색상
 )
 
 private val LightColorScheme = lightColorScheme(
     primary = Purple40,
     secondary = PurpleGrey40,
-    tertiary = Pink40
+    tertiary = Pink40,
+
+    background = Color.White,         // 전체 배경 색상
+    surface = Color.White,            // 표면(카드 등) 배경 색상
+    onPrimary = Color.Black,          // primary 색상 위의 텍스트 색상
+    onSecondary = Color.Black,        // secondary 색상 위의 텍스트 색상
+    onTertiary = Color.Black,         // tertiary 색상 위의 텍스트 색상
+    onBackground = Color.Black,       // 배경 색상 위의 텍스트 색상
+    onSurface = Color.Black           // 표면 색상 위의 텍스트 색상
 
     /* Other default colors to override
     background = Color(0xFFFFFBFE),

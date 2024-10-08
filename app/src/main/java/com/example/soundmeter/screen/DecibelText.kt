@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -25,6 +26,8 @@ fun DecibelText(
     modifier: Modifier = Modifier,
     viewModel: SoundMeterViewModel = hiltViewModel()
 ) {
+    val textColor = MaterialTheme.colorScheme.onBackground
+
     Column(
         modifier = modifier.fillMaxWidth()
             .padding(top = 100.dp),
@@ -48,13 +51,19 @@ fun DecibelText(
             decibel in 100.0..1000.0 -> "${decibel.toInt()}dB, 총소리,경적소리"
             else -> "측정불가"
         }
+
         val elapsedTime = viewModel.getElapsedTime()
         val elapsedTimeText = String.format("%02d:%02d",
             (elapsedTime / 1000) / 60, // 분 계산
             (elapsedTime / 1000) % 60  // 초 계산
         )
-        Text(elapsedTimeText, textAlign = TextAlign.Center, fontSize = 15.sp)
-        Text(dBLevel, textAlign = TextAlign.Center, fontSize = 25.sp)
+        Text(
+            elapsedTimeText,
+            textAlign = TextAlign.Center,
+            fontSize = 15.sp,
+            color = textColor
+        )
+        Text(dBLevel, textAlign = TextAlign.Center, fontSize = 25.sp,color = textColor)
 
         val (minValue, avgValue, maxValue) = viewModel.getMinMaxAvgDecibel()
 
