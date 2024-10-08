@@ -5,8 +5,10 @@ import android.graphics.Paint
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
@@ -42,6 +44,15 @@ fun Meter(
 //    decibel: Double
     viewModel: SoundMeterViewModel = hiltViewModel()
 ) {
+
+    val isDarkMode = isSystemInDarkTheme()
+
+    val backgroundColor = if (isDarkMode) Color.Black else Color.White
+    val lineColor = MaterialTheme.colorScheme.onBackground
+    val textColor = MaterialTheme.colorScheme.onBackground
+    val minuteHandColor = if (isDarkMode) Color.White else Color.Black
+    val boxColor = if (isDarkMode) Color.DarkGray else Color.LightGray
+
     val decibel by viewModel.decibelFlow.collectAsState(initial = 0.0)
 
     Canvas(modifier = modifier
@@ -101,9 +112,14 @@ fun Meter(
                 )
 
                 // 눈금 그리기
-                val lineColor = if (index in 80..100) Color.Red else if (isMajorGradation) clockStyle.hourGradationColor else clockStyle.minuteGradationColor
+//                val lineColor = if (index in 80..100) Color.Red else if (isMajorGradation) clockStyle.hourGradationColor else clockStyle.minuteGradationColor
+                val currentLineColor = when {
+                    index in 80..100 -> Color.Red
+                    isMajorGradation -> lineColor
+                    else -> Color.Gray
+                }
                 drawLine(
-                    color = lineColor,
+                    color = currentLineColor,
                     start = start,
                     end = end,
                     strokeWidth = if (isMajorGradation) clockStyle.hourGradationWidth.toPx() else clockStyle.minuteGradationWidth.toPx()
@@ -128,7 +144,7 @@ fun Meter(
                     x.toFloat(),
                     y.toFloat(),
                     Paint().apply {
-                        color = clockStyle.textColor.toArgb()
+                        color = textColor.toArgb()
                         textSize = (clockStyle.textSize.toPx() * 0.8).toFloat()
                         textAlign = Paint.Align.CENTER
                     }
@@ -154,7 +170,7 @@ fun Meter(
         )
 
         drawLine(
-            color = clockStyle.minuteHandColor,
+            color = minuteHandColor,
             start = Offset(centerX, centerY),
             end = decibelLineEnd,
             strokeWidth = clockStyle.minuteHandWidth.toPx(),
@@ -166,9 +182,8 @@ fun Meter(
         val rectTop = centerY + 100f
         val cornerRadius = 20f
 
-
         drawRoundRect(
-            color = Color.Black,
+            color = boxColor,
             topLeft = Offset(centerX - rectWidth / 2, rectTop),
             size = Size(rectWidth, rectHeight),
             cornerRadius = CornerRadius(cornerRadius, cornerRadius)
@@ -180,7 +195,7 @@ fun Meter(
             centerX,
             rectTop + rectHeight / 2 + 30f,
             Paint().apply {
-                color = Color.White.toArgb()
+                color = textColor.toArgb()
                 textSize = 100f
                 textAlign = Paint.Align.CENTER
             }
