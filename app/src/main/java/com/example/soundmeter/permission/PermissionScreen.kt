@@ -32,8 +32,10 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
+import com.example.soundmeter.R
 import com.example.soundmeter.screen.DecibelText
 import com.example.soundmeter.screen.GraphUi
 import com.example.soundmeter.screen.Meter
@@ -118,7 +120,7 @@ fun PermissionScreen() {
                 onClick = { moveToSetting(context) },
                 modifier = Modifier.padding(top = 16.dp, start = 20.dp)
             ) {
-                Text("이 앱은 음성을 녹음하기 위해 권한이 필요합니다.\n클릭해주세요")
+                Text(text = stringResource(id = R.string.permission_request))
             }
         }
     }

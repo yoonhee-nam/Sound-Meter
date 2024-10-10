@@ -20,5 +20,5 @@
     <string name="resume">再開</string>
     <string name="stop">停止</string>
     <string name="start">開始</string>
-    <string name="permission_request">このアプリは音声を録音するための権限が必要です。\\nクリックしてください。</string>
+    <string name="permission_request">このアプリは音声を録音するための権限が必要です。\nクリックしてください。</string>
 </resources>
