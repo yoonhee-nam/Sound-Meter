@@ -88,6 +88,9 @@ dependencies {
     implementation("com.patrykandpatrick.vico:core:1.15.0")
     // For the view system.
     implementation("com.patrykandpatrick.vico:views:1.15.0")
+
+    //ad
+    implementation("com.google.android.gms:play-services-ads:23.3.0")
 }
 
 kapt {

@@ -17,6 +17,11 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.SoundMeter"
         tools:targetApi="31">
+
+        <meta-data
+            android:name="com.google.android.gms.ads.APPLICATION_ID"
+            android:value="ca-app-pub-1262117804164162~6340890176" />
+
         <activity
             android:name=".MainActivity"
             android:exported="true"
