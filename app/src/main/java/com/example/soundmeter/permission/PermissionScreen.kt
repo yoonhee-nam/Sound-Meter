@@ -36,6 +36,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import com.example.soundmeter.R
+import com.example.soundmeter.screen.BannersAds
 import com.example.soundmeter.screen.DecibelText
 import com.example.soundmeter.screen.GraphUi
 import com.example.soundmeter.screen.Meter
@@ -111,6 +112,7 @@ fun PermissionScreen() {
                 )
                 DecibelText()
                 GraphUi()
+                BannersAds()
             }
 
 
