@@ -1,15 +1,11 @@
 package com.example.soundmeter.screen
 
-import android.annotation.SuppressLint
 import android.graphics.Paint
-import android.os.Build
-import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.CornerRadius
@@ -19,20 +15,12 @@ import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.clipPath
-import androidx.compose.ui.graphics.drawscope.clipRect
 import androidx.compose.ui.graphics.nativeCanvas
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.soundmeter.sound_meter.SoundMeterViewModel
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
-import java.time.LocalTime
-import java.util.concurrent.TimeUnit
-import kotlin.io.path.Path
 import kotlin.math.cos
 import kotlin.math.sin
 
@@ -55,8 +43,10 @@ fun Meter(
 
     val decibel by viewModel.decibelFlow.collectAsState(initial = 0.0)
 
-    Canvas(modifier = modifier
-        .padding(top = 50.dp)) {
+    Canvas(
+        modifier = modifier
+            .padding(top = 50.dp)
+    ) {
         // 설정된 각도
         val startAngle = 160f
         val sweepAngle = 220f

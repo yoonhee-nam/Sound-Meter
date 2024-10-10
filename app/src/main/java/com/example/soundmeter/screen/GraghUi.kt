@@ -28,8 +28,10 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Color.Companion.Green
 import androidx.compose.ui.graphics.toArgb
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.example.soundmeter.R
 import com.example.soundmeter.sound_meter.SoundMeterViewModel
 import com.patrykandpatrick.vico.compose.axis.horizontal.rememberBottomAxis
 import com.patrykandpatrick.vico.compose.axis.vertical.rememberStartAxis
@@ -49,7 +51,6 @@ import com.patrykandpatrick.vico.core.scroll.AutoScrollCondition
 import com.patrykandpatrick.vico.core.scroll.InitialScroll
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.cancel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -217,11 +218,11 @@ fun GraphUi() {
                 TextButton(onClick = {
                     if (!isRecording.value) {
                         isRecording.value = true
-                        isPaused.value = false
                         viewModel.startRecording()
+                        isPaused.value = false
                     }
                 }) {
-                    Text(text = if (isRecording.value && !isPaused.value) "Recording..." else "Start")
+                    Text(text = stringResource(id = R.string.start))
                 }
 
                 TextButton(onClick = {
@@ -233,8 +234,9 @@ fun GraphUi() {
                         viewModel.resumeRecording()
                     }
                 }) {
-                    Text(text = if (isPaused.value) "Resume" else "Pause")
+                    Text(text = if (isPaused.value) stringResource(id = R.string.resume) else stringResource(id = R.string.pause))
                 }
+
                 TextButton(onClick = {
                     if (isRecording.value) {
                         isRecording.value = false
@@ -246,7 +248,7 @@ fun GraphUi() {
                         Log.d("GraphUi", "Dataset Size after clear: ${datasetForModel.size}")
                     }
                 }) {
-                    Text(text = "Stop")
+                    Text(text = stringResource(id = R.string.stop))
                 }
             }
         }

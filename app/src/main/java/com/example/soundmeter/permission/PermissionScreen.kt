@@ -33,7 +33,6 @@ import androidx.core.content.ContextCompat
 import com.example.soundmeter.screen.DecibelText
 import com.example.soundmeter.screen.GraphUi
 import com.example.soundmeter.screen.Meter
-import com.example.soundmeter.screen.PulsatingCircles
 
 @Composable
 fun PermissionScreen() {

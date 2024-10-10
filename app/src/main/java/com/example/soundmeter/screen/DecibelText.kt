@@ -1,7 +1,6 @@
 package com.example.soundmeter.screen
 
 import android.annotation.SuppressLint
-import android.webkit.WebSettings.TextSize
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -14,10 +13,12 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.example.soundmeter.R
 import com.example.soundmeter.sound_meter.SoundMeterViewModel
 
 @SuppressLint("DefaultLocale")
@@ -39,17 +40,17 @@ fun DecibelText(
 
         dBLevel = when {
             decibel in 0.0 .. 10.0 -> ""
-            decibel in 10.0 .. 20.0 -> "${decibel.toInt()}dB, 고양이 걷는소리"
-            decibel in 20.0..30.0 -> "${decibel.toInt()}dB, 나뭇잎 부딪치는 소리"
-            decibel in 30.0..40.0 -> "${decibel.toInt()}dB, 조용한 독서실"
-            decibel in 40.0..50.0 -> "${decibel.toInt()}dB, 일반적인 가정의 소리"
-            decibel in 50.0..60.0 -> "${decibel.toInt()}dB, 조용한 사무실 소리"
-            decibel in 60.0..70.0 -> "${decibel.toInt()}dB, 일반적인 카페소리"
-            decibel in 70.0..80.0 -> "${decibel.toInt()}dB, 시끄러운 시장 소리"
-            decibel in 80.0..90.0 -> "${decibel.toInt()}dB, 철도, 전철 소음"
-            decibel in 90.0..100.0 -> "${decibel.toInt()}dB, 시끄러운 공장소음"
-            decibel in 100.0..1000.0 -> "${decibel.toInt()}dB, 총소리,경적소리"
-            else -> "측정불가"
+            decibel in 10.0 .. 20.0 -> stringResource(id = R.string.decibel_10_20)
+            decibel in 20.0..30.0 -> stringResource(id = R.string.decibel_20_30)
+            decibel in 30.0..40.0 -> stringResource(id = R.string.decibel_30_40)
+            decibel in 40.0..50.0 -> stringResource(id = R.string.decibel_40_50)
+            decibel in 50.0..60.0 -> stringResource(id = R.string.decibel_50_60)
+            decibel in 60.0..70.0 -> stringResource(id = R.string.decibel_60_70)
+            decibel in 70.0..80.0 -> stringResource(id = R.string.decibel_70_80)
+            decibel in 80.0..90.0 -> stringResource(id = R.string.decibel_80_90)
+            decibel in 90.0..100.0 -> stringResource(id = R.string.decibel_90_100)
+            decibel in 100.0..1000.0 -> stringResource(id = R.string.decibel_100_1000)
+            else -> stringResource(id = R.string.unknown_measurement)
         }
 
         val elapsedTime = viewModel.getElapsedTime()
@@ -84,7 +85,6 @@ fun DecibelText(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceEvenly
             ) {
-                // 최소값, 평균값, 최대값을 ViewModel에서 가져오는 방식으로 수정하세요
                 Text("${minValue.toInt()}", textAlign = TextAlign.Center, fontSize = 20.sp)
                 Text("    ${avgValue.toInt()}", textAlign = TextAlign.Center, fontSize = 20.sp)
                 Text("  ${maxValue.toInt()}", textAlign = TextAlign.Center, fontSize = 20.sp)
