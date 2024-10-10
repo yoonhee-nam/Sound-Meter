@@ -30,7 +30,8 @@ fun DecibelText(
     val textColor = MaterialTheme.colorScheme.onBackground
 
     Column(
-        modifier = modifier.fillMaxWidth()
+        modifier = modifier
+            .fillMaxWidth()
             .padding(top = 100.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
@@ -69,7 +70,8 @@ fun DecibelText(
         val (minValue, avgValue, maxValue) = viewModel.getMinMaxAvgDecibel()
 
         Column(
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier
+                .fillMaxWidth()
                 .padding(top = 30.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
@@ -77,19 +79,18 @@ fun DecibelText(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceEvenly
             ) {
-                Text("최소", textAlign = TextAlign.Center, fontSize = 20.sp)
-                Text("평균", textAlign = TextAlign.Center, fontSize = 20.sp)
-                Text("최대", textAlign = TextAlign.Center, fontSize = 20.sp)
+                Text(stringResource(id = R.string.min_label), textAlign = TextAlign.Center, fontSize = 20.sp,color = textColor)
+                Text(stringResource(id = R.string.average_label), textAlign = TextAlign.Center, fontSize = 20.sp,color = textColor)
+                Text(stringResource(id = R.string.max_label), textAlign = TextAlign.Center, fontSize = 20.sp,color = textColor)
             }
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceEvenly
             ) {
-                Text("${minValue.toInt()}", textAlign = TextAlign.Center, fontSize = 20.sp)
-                Text("    ${avgValue.toInt()}", textAlign = TextAlign.Center, fontSize = 20.sp)
-                Text("  ${maxValue.toInt()}", textAlign = TextAlign.Center, fontSize = 20.sp)
+                Text("${minValue.toInt()}", textAlign = TextAlign.Center, fontSize = 20.sp,color = textColor)
+                Text("    ${avgValue.toInt()}", textAlign = TextAlign.Center, fontSize = 20.sp,color = textColor)
+                Text("  ${maxValue.toInt()}", textAlign = TextAlign.Center, fontSize = 20.sp,color = textColor)
             }
         }
-
     }
 }
