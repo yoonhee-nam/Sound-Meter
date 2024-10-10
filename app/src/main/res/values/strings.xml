@@ -27,4 +27,7 @@
     <string name="stop">Stop</string>
     <string name="start">Start</string>
 
+    <!-- Permission Request Text -->
+    <string name="permission_request">This app requires permission to record audio. \\n Please click here.</string>
+
 </resources>

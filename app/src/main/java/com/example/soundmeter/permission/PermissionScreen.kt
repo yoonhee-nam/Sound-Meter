@@ -1,10 +1,13 @@
 package com.example.soundmeter.permission
 
 import android.Manifest
+import android.app.Activity
+import android.app.Application
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
+import android.os.Bundle
 import android.provider.Settings
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -20,6 +23,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -54,12 +58,35 @@ fun PermissionScreen() {
         hasAudioRecordPermission = isGranted
     }
 
-    // 권한 요청을 다시 시도하도록 LaunchedEffect 사용
-    LaunchedEffect(Unit) {
+    LaunchedEffect(hasAudioRecordPermission) {
         if (!hasAudioRecordPermission) {
             launcher.launch(Manifest.permission.RECORD_AUDIO)
         }
     }
+
+    DisposableEffect(context) {
+        val listener = object : Application.ActivityLifecycleCallbacks {
+            override fun onActivityResumed(activity : Activity) {
+                hasAudioRecordPermission = ContextCompat.checkSelfPermission(
+                    context,
+                    Manifest.permission.RECORD_AUDIO
+                ) == PackageManager.PERMISSION_GRANTED
+            }
+            override fun onActivityCreated(activity: Activity, savedInstanceState: Bundle?) {}
+            override fun onActivityStarted(activity: Activity) {}
+            override fun onActivityPaused(activity: Activity) {}
+            override fun onActivityStopped(activity: Activity) {}
+            override fun onActivitySaveInstanceState(activity: Activity, outState: Bundle) {}
+            override fun onActivityDestroyed(activity: Activity) {}
+        }
+        val app = context.applicationContext as Application
+        app.registerActivityLifecycleCallbacks(listener)
+
+        onDispose {
+            app.unregisterActivityLifecycleCallbacks(listener)
+        }
+    }
+
     val backgroundColor = MaterialTheme.colorScheme.background
 
     Box(
@@ -83,22 +110,15 @@ fun PermissionScreen() {
                 DecibelText()
                 GraphUi()
             }
-            //UI변경하기
-
-//            PulsatingCircles()
 
 
         } else {
-            Text(
-                modifier = Modifier.padding(top = 130.dp, start = 20.dp, end = 20.dp),
-                text = "권한이 필요합니다. 이 앱은 음성을 녹음하기 위해 권한이 필요합니다.",
-                style = MaterialTheme.typography.bodyLarge
-            )
+
             TextButton(
                 onClick = { moveToSetting(context) },
                 modifier = Modifier.padding(top = 16.dp, start = 20.dp)
             ) {
-                Text("권한 요청 다시 시도")
+                Text("이 앱은 음성을 녹음하기 위해 권한이 필요합니다.\n클릭해주세요")
             }
         }
     }
