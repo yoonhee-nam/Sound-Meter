@@ -28,7 +28,7 @@ import kotlin.math.sin
 @Composable
 fun Meter(
     modifier: Modifier = Modifier,
-    clockStyle: ClockStyle = ClockStyle(),
+    meterStyle: MeterStyle = MeterStyle(),
 //    decibel: Double
     viewModel: SoundMeterViewModel = hiltViewModel()
 ) {
@@ -87,9 +87,9 @@ fun Meter(
                 val isMidGradation = index % 5 == 0 && !isMajorGradation
 
                 val length = when {
-                    isMajorGradation -> clockStyle.hourGradationLength.toPx() // 긴 눈금
-                    isMidGradation -> clockStyle.minuteGradationLength.toPx() * 1.7f // 중간 눈금
-                    else -> clockStyle.minuteGradationLength.toPx() * 1.0f // 짧은 눈금
+                    isMajorGradation -> meterStyle.hourGradationLength.toPx() // 긴 눈금
+                    isMidGradation -> meterStyle.minuteGradationLength.toPx() * 1.7f // 중간 눈금
+                    else -> meterStyle.minuteGradationLength.toPx() * 1.0f // 짧은 눈금
                 }
 
                 val start = Offset(
@@ -112,7 +112,7 @@ fun Meter(
                     color = currentLineColor,
                     start = start,
                     end = end,
-                    strokeWidth = if (isMajorGradation) clockStyle.hourGradationWidth.toPx() else clockStyle.minuteGradationWidth.toPx()
+                    strokeWidth = if (isMajorGradation) meterStyle.hourGradationWidth.toPx() else meterStyle.minuteGradationWidth.toPx()
                 )
             }
         }
@@ -125,9 +125,9 @@ fun Meter(
                     startAngle + (index * sweepAngle / (gradationCount - 1).toDouble())
                 val angleInRadian = Math.toRadians(angleInDegree)
 
-                val textRadius = radius - clockStyle.textSize.toPx() * 1.7f
+                val textRadius = radius - meterStyle.textSize.toPx() * 1.7f
                 val x = textRadius * cos(angleInRadian) + centerX
-                val y = textRadius * sin(angleInRadian) + centerY + clockStyle.textSize.toPx() / 3f
+                val y = textRadius * sin(angleInRadian) + centerY + meterStyle.textSize.toPx() / 3f
 
                 drawContext.canvas.nativeCanvas.drawText(
                     "${index}",
@@ -135,7 +135,7 @@ fun Meter(
                     y.toFloat(),
                     Paint().apply {
                         color = textColor.toArgb()
-                        textSize = (clockStyle.textSize.toPx() * 0.8).toFloat()
+                        textSize = (meterStyle.textSize.toPx() * 0.8).toFloat()
                         textAlign = Paint.Align.CENTER
                     }
                 )
@@ -144,8 +144,8 @@ fun Meter(
 
         // 중심점 그리기
         drawCircle(
-            radius = clockStyle.centerCircleSize.toPx(),
-            color = clockStyle.centerCircleColor,
+            radius = meterStyle.centerCircleSize.toPx(),
+            color = meterStyle.centerCircleColor,
             center = Offset(centerX, centerY)
         )
 
@@ -155,15 +155,15 @@ fun Meter(
         val decibelHandInDegree = startAngle + decibel * decibelAngleIncrement
         val decibelHandInRadian = Math.toRadians(decibelHandInDegree)
         val decibelLineEnd = Offset(
-            x = (centerX + clockStyle.minuteHandLength.toPx() * cos(decibelHandInRadian)).toFloat(),
-            y = (centerY + clockStyle.minuteHandLength.toPx() * sin(decibelHandInRadian)).toFloat()
+            x = (centerX + meterStyle.minuteHandLength.toPx() * cos(decibelHandInRadian)).toFloat(),
+            y = (centerY + meterStyle.minuteHandLength.toPx() * sin(decibelHandInRadian)).toFloat()
         )
 
         drawLine(
             color = minuteHandColor,
             start = Offset(centerX, centerY),
             end = decibelLineEnd,
-            strokeWidth = clockStyle.minuteHandWidth.toPx(),
+            strokeWidth = meterStyle.minuteHandWidth.toPx(),
             cap = StrokeCap.Round
         )
 
@@ -198,6 +198,6 @@ fun Meter(
 fun MeterPreview() {
     Meter(
         modifier = Modifier.size(300.dp),
-        clockStyle = ClockStyle(),
+        meterStyle = MeterStyle(),
     )
 }

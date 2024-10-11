@@ -18,20 +18,17 @@ fun BannersAds() {
         factory = { context ->
             AdView(context).apply {
                 setAdSize(AdSize.BANNER)
-                adUnitId = "ca-app-pub-3940256099942544/6300978111"
+                adUnitId = "ca-app-pub-1262117804164162/1183297807"
                 adListener = object : AdListener() {
                     override fun onAdLoaded() {
                         Log.d("BannerAd", "Ad loaded successfully.")
                     }
-
                     override fun onAdFailedToLoad(error: LoadAdError) {
-                        Log.e("BannerAd", "Ad failed to load: ${error.message}")
+                        Log.e("BannerAd", "Ad failed to load: ${error.message},$error")
                     }
-
                     override fun onAdOpened() {
                         Log.d("BannerAd", "Ad opened.")
                     }
-
                     override fun onAdClosed() {
                         Log.d("BannerAd", "Ad closed.")
                     }
