@@ -5,7 +5,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 
 
-data class ClockStyle(
+data class MeterStyle(
     val hourHandWidth: Dp = 5.dp, // 시침 두께
     val minuteHandWidth: Dp = 5.dp, // 분침 두께
     val secondHandWidth: Dp = 3.dp, // 초침 두께
