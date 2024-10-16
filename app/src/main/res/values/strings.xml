@@ -1,0 +1,33 @@
+<resources>
+    <!-- Decibel Levels -->
+    <string name="decibel_10_20">10–20dB, Cat walking sound</string>
+    <string name="decibel_20_30">20–30dB, Sound of leaves rustling</string>
+    <string name="decibel_30_40">30–40dB, Quiet reading room</string>
+    <string name="decibel_40_50">40–50dB, Typical household sound</string>
+    <string name="decibel_50_60">50–60dB, Quiet office sound</string>
+    <string name="decibel_60_70">60–70dB, Typical cafe sound</string>
+    <string name="decibel_70_80">70–80dB, Noisy market sound</string>
+    <string name="decibel_80_90">80–90dB, Train noise</string>
+    <string name="decibel_90_100">90–100dB, Loud factory noise</string>
+    <string name="decibel_100_1000">100–1000dB, Gunshot, horn sound</string>
+    <string name="unknown_measurement">Measurement not available</string>
+
+    <!-- Labels -->
+    <string name="min_label">Minimum</string>
+    <string name="average_label">Average</string>
+    <string name="max_label">Maximum</string>
+
+    <!-- Time -->
+    <string name="elapsed_time">Elapsed Time: %1$s</string>
+    <string name="app_name">SoundMeter</string>
+
+    <!-- Button Texts -->
+    <string name="pause">Pause</string>
+    <string name="resume">Resume</string>
+    <string name="stop">Stop</string>
+    <string name="start">Start</string>
+
+    <!-- Permission Request Text -->
+    <string name="permission_request">This app requires permission to record audio.\nPlease click here.</string>
+
+</resources>

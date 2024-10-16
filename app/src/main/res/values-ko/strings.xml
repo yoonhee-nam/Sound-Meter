@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">데시벨측정기</string>
+    <string name="min_label">최소</string>
+    <string name="average_label">평균</string>
+    <string name="max_label">최대</string>
+    <string name="elapsed_time">경과 시간: %1$s</string>
+    <string name="decibel_10_20">10-20dB, 고양이 걷는소리</string>
+    <string name="decibel_20_30">20-30dB, 나뭇잎 부딪치는 소리</string>
+    <string name="decibel_30_40">30-40dB, 조용한 독서실</string>
+    <string name="decibel_40_50">40-50dB, 일반적인 가정의 소리</string>
+    <string name="decibel_50_60">50-60dB, 조용한 사무실 소리</string>
+    <string name="decibel_60_70">60-70dB, 일반적인 카페소리</string>
+    <string name="decibel_70_80">70-80dB, 시끄러운 시장 소리</string>
+    <string name="decibel_80_90">80-90dB, 철도, 전철 소음</string>
+    <string name="decibel_90_100">90-100dB, 시끄러운 공장소음</string>
+    <string name="decibel_100_1000">100-1000dB, 총소리, 경적소리</string>
+    <string name="unknown_measurement">측정불가</string>
+    <string name="pause">일시정지</string>
+    <string name="resume">다시 시작</string>
+    <string name="stop">정지</string>
+    <string name="start">시작</string>
+    <string name="permission_request">이 앱은 음성을 녹음하기 위해 권한이 필요합니다. \n클릭해주세요.</string>
+</resources>
