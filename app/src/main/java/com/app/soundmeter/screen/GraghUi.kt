@@ -1,4 +1,4 @@
-package com.example.soundmeter.screen
+package com.app.soundmeter.screen
 
 import android.util.Log
 import androidx.compose.animation.core.spring
@@ -32,7 +32,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.soundmeter.R
-import com.example.soundmeter.sound_meter.SoundMeterViewModel
+import com.app.soundmeter.sound_meter.SoundMeterViewModel
 import com.patrykandpatrick.vico.compose.axis.horizontal.rememberBottomAxis
 import com.patrykandpatrick.vico.compose.axis.vertical.rememberStartAxis
 import com.patrykandpatrick.vico.compose.chart.Chart

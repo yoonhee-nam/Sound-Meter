@@ -1,4 +1,4 @@
-package com.example.soundmeter.screen
+package com.app.soundmeter.screen
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Arrangement
@@ -19,7 +19,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.soundmeter.R
-import com.example.soundmeter.sound_meter.SoundMeterViewModel
+import com.app.soundmeter.sound_meter.SoundMeterViewModel
 
 @SuppressLint("DefaultLocale")
 @Composable

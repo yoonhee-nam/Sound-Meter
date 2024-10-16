@@ -1,4 +1,4 @@
-package com.example.soundmeter.screen
+package com.app.soundmeter.screen
 
 import android.util.Log
 import androidx.compose.foundation.layout.fillMaxWidth

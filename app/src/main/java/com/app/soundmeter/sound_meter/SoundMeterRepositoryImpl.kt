@@ -1,4 +1,4 @@
-package com.example.soundmeter.sound_meter
+package com.app.soundmeter.sound_meter
 
 import android.annotation.SuppressLint
 import android.content.Context

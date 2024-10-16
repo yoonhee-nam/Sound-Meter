@@ -1,4 +1,4 @@
-package com.example.soundmeter
+package com.app.soundmeter
 
 import android.app.Application
 import android.content.Context

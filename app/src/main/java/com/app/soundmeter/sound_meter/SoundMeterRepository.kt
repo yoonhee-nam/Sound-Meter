@@ -1,4 +1,4 @@
-package com.example.soundmeter.sound_meter
+package com.app.soundmeter.sound_meter
 
 import kotlinx.coroutines.flow.Flow
 

@@ -1,4 +1,4 @@
-package com.example.soundmeter.ui.theme
+package com.app.soundmeter.ui.theme
 
 import androidx.compose.ui.graphics.Color
 

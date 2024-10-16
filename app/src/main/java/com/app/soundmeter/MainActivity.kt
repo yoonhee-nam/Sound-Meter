@@ -1,4 +1,4 @@
-package com.example.soundmeter
+package com.app.soundmeter
 
 import android.os.Build
 import android.os.Bundle
@@ -10,8 +10,8 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import com.example.soundmeter.permission.PermissionScreen
-import com.example.soundmeter.ui.theme.SoundMeterTheme
+import com.app.soundmeter.permission.PermissionScreen
+import com.app.soundmeter.ui.theme.SoundMeterTheme
 import com.google.android.gms.ads.MobileAds
 import dagger.hilt.android.AndroidEntryPoint
 

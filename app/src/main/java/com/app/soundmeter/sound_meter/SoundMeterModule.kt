@@ -1,4 +1,4 @@
-package com.example.soundmeter.sound_meter
+package com.app.soundmeter.sound_meter
 
 import android.content.Context
 import dagger.Module
@@ -16,7 +16,7 @@ object SoundMeterModule {
     @Singleton
     fun provideSoundMeterRepository(
       @ApplicationContext context: Context
-    ) : SoundMeterRepository{
+    ) : SoundMeterRepository {
         return SoundMeterRepositoryImpl(context)
     }
 }

@@ -1,4 +1,4 @@
-package com.example.soundmeter.screen
+package com.app.soundmeter.screen
 
 import android.graphics.Paint
 import androidx.compose.foundation.Canvas
@@ -20,7 +20,7 @@ import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.example.soundmeter.sound_meter.SoundMeterViewModel
+import com.app.soundmeter.sound_meter.SoundMeterViewModel
 import kotlin.math.cos
 import kotlin.math.sin
 

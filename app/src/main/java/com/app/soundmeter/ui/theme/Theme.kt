@@ -1,4 +1,4 @@
-package com.example.soundmeter.ui.theme
+package com.app.soundmeter.ui.theme
 
 import android.app.Activity
 import android.os.Build
