@@ -1,4 +1,4 @@
-package com.app.soundmeter.screen
+package com.yoon.simplesoundmeter.screen
 
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.Dp

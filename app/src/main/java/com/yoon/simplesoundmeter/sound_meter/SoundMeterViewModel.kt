@@ -1,4 +1,4 @@
-package com.app.soundmeter.sound_meter
+package com.yoon.simplesoundmeter.sound_meter
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel

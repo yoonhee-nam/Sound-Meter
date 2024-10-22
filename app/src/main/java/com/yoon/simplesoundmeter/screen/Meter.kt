@@ -1,4 +1,4 @@
-package com.app.soundmeter.screen
+package com.yoon.simplesoundmeter.screen
 
 import android.graphics.Paint
 import androidx.compose.foundation.Canvas
@@ -20,7 +20,7 @@ import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.app.soundmeter.sound_meter.SoundMeterViewModel
+import com.yoon.simplesoundmeter.sound_meter.SoundMeterViewModel
 import kotlin.math.cos
 import kotlin.math.sin
 
@@ -35,7 +35,7 @@ fun Meter(
 
     val isDarkMode = isSystemInDarkTheme()
 
-    val backgroundColor = if (isDarkMode) Color.Black else Color.White
+//    val backgroundColor = if (isDarkMode) Color.Black else Color.White
     val lineColor = MaterialTheme.colorScheme.onBackground
     val textColor = MaterialTheme.colorScheme.onBackground
     val minuteHandColor = if (isDarkMode) Color.White else Color.Black

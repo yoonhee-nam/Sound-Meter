@@ -1,4 +1,4 @@
-package com.app.soundmeter.permission
+package com.yoon.simplesoundmeter.permission
 
 import android.Manifest
 import android.app.Activity
@@ -35,11 +35,11 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
-import com.example.soundmeter.R
-import com.app.soundmeter.screen.BannersAds
-import com.app.soundmeter.screen.DecibelText
-import com.app.soundmeter.screen.GraphUi
-import com.app.soundmeter.screen.Meter
+import com.yoon.simplesoundmeter.screen.BannersAds
+import com.yoon.simplesoundmeter.screen.DecibelText
+import com.yoon.simplesoundmeter.screen.GraphUi
+import com.yoon.simplesoundmeter.screen.Meter
+import com.yoon.simplesoundmeter.R
 
 @Composable
 fun PermissionScreen() {

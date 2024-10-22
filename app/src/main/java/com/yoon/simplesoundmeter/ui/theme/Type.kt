@@ -1,4 +1,4 @@
-package com.app.soundmeter.ui.theme
+package com.yoon.simplesoundmeter.ui.theme
 
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.TextStyle

@@ -1,6 +1,5 @@
-package com.app.soundmeter.ui.theme
+package com.yoon.simplesoundmeter.ui.theme
 
-import android.app.Activity
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme

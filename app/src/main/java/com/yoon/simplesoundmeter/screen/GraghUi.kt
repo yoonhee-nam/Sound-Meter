@@ -1,4 +1,4 @@
-package com.app.soundmeter.screen
+package com.yoon.simplesoundmeter.screen
 
 import android.util.Log
 import androidx.compose.animation.core.spring
@@ -31,8 +31,7 @@ import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.example.soundmeter.R
-import com.app.soundmeter.sound_meter.SoundMeterViewModel
+import com.yoon.simplesoundmeter.sound_meter.SoundMeterViewModel
 import com.patrykandpatrick.vico.compose.axis.horizontal.rememberBottomAxis
 import com.patrykandpatrick.vico.compose.axis.vertical.rememberStartAxis
 import com.patrykandpatrick.vico.compose.chart.Chart
@@ -49,6 +48,7 @@ import com.patrykandpatrick.vico.core.entry.ChartEntryModelProducer
 import com.patrykandpatrick.vico.core.entry.FloatEntry
 import com.patrykandpatrick.vico.core.scroll.AutoScrollCondition
 import com.patrykandpatrick.vico.core.scroll.InitialScroll
+import com.yoon.simplesoundmeter.R
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay

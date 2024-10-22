@@ -6,11 +6,11 @@ plugins {
 }
 
 android {
-    namespace = "com.app.soundmeter"
+    namespace = "com.yoon.simplesoundmeter"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.app.soundmeter"
+        applicationId = "com.yoon.simplesoundmeter"
         minSdk = 24
         targetSdk = 34
         versionCode = 1

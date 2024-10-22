@@ -1,23 +1,18 @@
-package com.app.soundmeter.sound_meter
+package com.yoon.simplesoundmeter.sound_meter
 
-import android.annotation.SuppressLint
 import android.content.Context
-import android.media.AudioFormat
-import android.media.AudioRecord
 import android.media.MediaRecorder
-import android.os.Build
 import android.util.Log
 import dagger.hilt.android.qualifiers.ApplicationContext
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.flowOn
 import java.io.File
 import javax.inject.Inject
 import kotlin.math.log10
 
+@Suppress("DEPRECATION")
 class SoundMeterRepositoryImpl @Inject constructor(
     @ApplicationContext private val context: Context
 ) : SoundMeterRepository {
