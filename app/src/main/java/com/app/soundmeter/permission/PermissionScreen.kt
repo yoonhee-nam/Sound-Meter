@@ -35,7 +35,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
-import com.example.soundmeter.R
+import com.app.soundmeter.R
 import com.app.soundmeter.screen.BannersAds
 import com.app.soundmeter.screen.DecibelText
 import com.app.soundmeter.screen.GraphUi

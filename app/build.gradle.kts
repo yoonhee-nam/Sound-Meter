@@ -13,8 +13,8 @@ android {
         applicationId = "com.app.soundmeter"
         minSdk = 24
         targetSdk = 34
-        versionCode = 1
-        versionName = "1.0"
+        versionCode = 2
+        versionName = "1.1"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -31,12 +31,13 @@ android {
             )
         }
     }
+
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
     kotlinOptions {
-        jvmTarget = "1.8"
+        jvmTarget = "17"
     }
     buildFeatures {
         compose = true
@@ -68,29 +69,32 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)    //lifecycle
-    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.7.0")
-    implementation("androidx.lifecycle:lifecycle-runtime-compose:2.7.0")
-    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.7.0")
+    implementation(libs.androidx.lifecycle.runtime.ktx.v270)
+    implementation(libs.androidx.lifecycle.runtime.compose)
+    implementation(libs.androidx.lifecycle.viewmodel.compose)
 
     // hilt
-    implementation("com.google.dagger:hilt-android:2.46")
-    kapt("com.google.dagger:hilt-android-compiler:2.46")
-    implementation ("androidx.hilt:hilt-navigation-compose:1.0.0")
-    kapt ("androidx.hilt:hilt-compiler:1.0.0")
+    //noinspection GradleDependency
+    implementation(libs.hilt.android.v248)
+    kapt(libs.hilt.android.compiler.v248)
+    //noinspection GradleDependency
+    implementation (libs.androidx.hilt.navigation.compose)
+    //noinspection GradleDependency
+    kapt (libs.androidx.hilt.compiler)
 
     // For Jetpack Compose.
-    implementation("com.patrykandpatrick.vico:compose:1.15.0")
+    implementation(libs.compose)
     // For `compose`. Creates a `ChartStyle` based on an M2 Material Theme.
-    implementation("com.patrykandpatrick.vico:compose-m2:1.15.0")
+    implementation(libs.compose.m2)
     // For `compose`. Creates a `ChartStyle` based on an M3 Material Theme.
-    implementation("com.patrykandpatrick.vico:compose-m3:1.15.0")
+    implementation(libs.compose.m3)
     // Houses the core logic for charts and other elements. Included in all other modules.
-    implementation("com.patrykandpatrick.vico:core:1.15.0")
+    implementation(libs.core)
     // For the view system.
-    implementation("com.patrykandpatrick.vico:views:1.15.0")
+    implementation(libs.views)
 
     //ad
-    implementation("com.google.android.gms:play-services-ads:23.3.0")
+    implementation(libs.play.services.ads)
 }
 
 kapt {
