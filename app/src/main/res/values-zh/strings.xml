@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">分贝计</string>
+    <string name="app_name">简单分贝测量仪</string>
     <string name="min_label">最小</string>
     <string name="average_label">平均</string>
     <string name="max_label">最大</string>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">デシベルメーター</string>
+    <string name="app_name">シンプルデシベルメーター</string>
     <string name="min_label">最小</string>
     <string name="average_label">平均</string>
     <string name="max_label">最大</string>

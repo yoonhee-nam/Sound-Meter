@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">데시벨측정기</string>
+    <string name="app_name">심플데시벨측정기</string>
     <string name="min_label">최소</string>
     <string name="average_label">평균</string>
     <string name="max_label">최대</string>

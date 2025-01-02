@@ -93,12 +93,4 @@ class SoundMeterViewModel @Inject constructor(
         }
     }
 
-    fun getElapsedTimeInSeconds(): Long {
-        return if (isRecording) {
-            (System.currentTimeMillis() - recordStartTime) / 1000
-        } else {
-            0
-        }
-    }
-
 }
